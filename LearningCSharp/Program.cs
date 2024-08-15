@@ -4,21 +4,26 @@
     {
         private static char LetterPlayer = default;
         private static bool[] LettersFound = null!;
-        private static string MysteryWord = "EXEMPLE";
+        private static string MysteryWord = null!;
+        private static string FileDirectory = "Dico/";
         private static List<char> LettersTyped = new List<char>();
-        private static ushort Lifes = 3;
+        private static ushort Lifes;
 
         static void Main(string[] args)
         {
+            Console.Title = "Jeu du Pendu par ErronBlack501";
             Console.WriteLine("-----------------BIENVENUE DANS LE JEU DU PENDU-----------------\n");
-            LettersFound = new bool[MysteryWord.Length];
-            Array.Fill(LettersFound, false);
-
+         
             do
             {
+                GenerateMysteryWord("Easy");  
                 do
                 {
-                    Console.WriteLine($"---Il vous reste {Lifes} essais---");
+                    if (Lifes > 1)
+                        Console.WriteLine($"---Il vous reste {Lifes} essais---");
+                    else
+                        Console.WriteLine($"---Il vous reste {Lifes} essai---");
+
                     PrintMysteryWord();
                     Console.Write("Saisissez une lettre : ");
                     LetterPlayer = InputLetter();
@@ -28,7 +33,10 @@
                         if (MysteryWord.Contains(LetterPlayer))
                             Update();
                         else
+                        {
+                            Console.Beep();
                             Lifes--;
+                        }
                         LettersTyped.Add(LetterPlayer);
                     }
                     else
@@ -36,12 +44,15 @@
 
                 } while (!IsWinning() && Lifes > 0);
                 
+                Console.Write('\n');
+                
                 if (Lifes > 0)
                     Console.WriteLine($"Bravo!\nVous avez gagné, le mot mystère était bien \"{MysteryWord}\".");
                 else
-                    Console.WriteLine("Dommage!\nVous avez perdu car vous avez atteint le nombre limite d'essai.");
+                    Console.WriteLine($"Dommage!\nVous avez perdu car vous avez atteint le nombre limite d'essai.\nLe mot mystère était \"{MysteryWord}\".");
             
-            } while (IsRestarting());          
+            } while (IsRestarting());
+            Console.WriteLine("-----------AU REVOIR------------");
         }
 
         private static bool IsWinning()
@@ -118,6 +129,16 @@
                 return true;
             else
                 return false;
+        }
+
+        private static void GenerateMysteryWord(string level)
+        {
+            Random random = new Random();
+            string[] fileTextLines = File.ReadAllLines($"{FileDirectory}/{level}.txt");
+            MysteryWord = fileTextLines[random.Next(fileTextLines.Length)];
+            LettersFound = new bool[MysteryWord.Length];
+            Array.Fill(LettersFound, false);
+            Lifes = 3;
         }
     }
 }
