@@ -2,10 +2,10 @@
 {
     internal class Program
     {
-        private static char LetterPlayer = default;
+        private static char LetterPlayer;
         private static bool[] LettersFound = null!;
         private static string MysteryWord = null!;
-        private static string FileDirectory = "Dico/";
+        private static readonly string FileDirectory = "Dico/";
         private static List<char> LettersTyped = new List<char>();
         private static ushort Lifes;
 
@@ -139,6 +139,9 @@
             LettersFound = new bool[MysteryWord.Length];
             Array.Fill(LettersFound, false);
             Lifes = 3;
+            LetterPlayer = default;
+            LettersTyped.Clear();
+            Console.Clear();
         }
     }
 }
