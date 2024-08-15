@@ -126,7 +126,10 @@
             } while (answer != 'O' && answer != 'N');
             
             if (answer == 'O')
+            {
+                Console.Clear();    
                 return true;
+            }
             else
                 return false;
         }
@@ -141,7 +144,6 @@
             Lifes = 3;
             LetterPlayer = default;
             LettersTyped.Clear();
-            Console.Clear();
         }
     }
 }
