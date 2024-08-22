@@ -1,5 +1,12 @@
 ﻿namespace LearningCSharp
 {
+    public enum LevelEnum
+    {
+        Easy,
+        Medium,
+        Hard,
+        UltraHard
+    }
     internal class Program
     {
         private static char _letterPlayer;
@@ -8,15 +15,17 @@
         private static readonly string _fileDirectory = "Dico/";
         private static List<char> _lettersTyped = new List<char>();
         private static ushort _lifes;
+        private static string _level = String.Empty;
 
         static void Main(string[] args)
         {
             Console.Title = "Jeu du Pendu par ErronBlack501";
             Console.WriteLine("-----------------BIENVENUE DANS LE JEU DU PENDU-----------------\n");
-         
+            PickLevel();
+            
             do
             {
-                GenerateMysteryWord("Easy");  
+                GenerateMysteryWord();  
                 do
                 {
                     if (_lifes > 1)
@@ -53,6 +62,37 @@
             
             } while (IsRestarting());
             Console.WriteLine("-----------AU REVOIR------------");
+        }
+
+        private static void PickLevel()
+        {
+            string[] choices = { "1", "2", "3", "4" };
+            string? choice;
+            do
+            {
+                Console.Write('\n');
+                Console.WriteLine("Choisissez une difficultée: \n1 => Facile\n2 => Moyenne\n3 => Difficile\n4 => Très difficile");
+                choice = Console.ReadLine();
+            } while (choice == null || !choices.Contains(choice));
+            
+            switch (choice) 
+            {
+                case "1":
+                    _level = "Easy"; 
+                    break;
+                case "2":
+                    _level = "Medium";
+                    break;
+                case "3": 
+                    _level = "Hard";
+                    break;
+                case "4": 
+                    _level = "UltraHard";
+                    break;
+                default:
+                    Console.WriteLine("-----Erreur fatale-----");
+                    break;
+            }
         }
 
         private static bool IsWinning()
@@ -116,7 +156,7 @@
             char answer = default;
             do
             {
-                Console.Write("Voulez-vous une nouvelle partie ? : ");
+                Console.Write("Voulez-vous une nouvelle partie (O: oui, N: non)? : ");
                 string? input = Console.ReadLine();
             
                 if (input != null && input != String.Empty)
@@ -127,23 +167,23 @@
             
             if (answer == 'O')
             {
-                Console.Clear();    
                 return true;
             }
             else
                 return false;
         }
 
-        private static void GenerateMysteryWord(string level)
+        private static void GenerateMysteryWord()
         {
             Random random = new Random();
-            string[] fileTextLines = File.ReadAllLines($"{_fileDirectory}/{level}.txt");
+            string[] fileTextLines = File.ReadAllLines($"{_fileDirectory}/{_level}.txt");
             _mysteryWord = fileTextLines[random.Next(fileTextLines.Length)];
             _lettersFound = new bool[_mysteryWord.Length];
             Array.Fill(_lettersFound, false);
             _lifes = 5;
             _letterPlayer = default;
             _lettersTyped.Clear();
+            Console.Clear();
         }
     }
 }
