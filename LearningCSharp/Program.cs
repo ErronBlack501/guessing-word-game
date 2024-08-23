@@ -9,13 +9,13 @@
     }
     internal class Program
     {
-        private static char _letterPlayer;
-        private static bool[] _lettersFound = null!;
-        private static string _mysteryWord = null!;
-        private static readonly string _fileDirectory = "Dico/";
-        private static List<char> _lettersTyped = new List<char>();
-        private static ushort _lifes;
-        private static string _level = String.Empty;
+        private static char s_letterPlayer;
+        private static bool[] s_lettersFound = null!;
+        private static string s_mysteryWord = null!;
+        private static readonly string s_fileDirectory = "Dico/";
+        private static List<char> s_lettersTyped = new List<char>();
+        private static ushort s_lifes;
+        private static string s_level = String.Empty;
 
         static void Main(string[] args)
         {
@@ -28,37 +28,37 @@
                 GenerateMysteryWord();  
                 do
                 {
-                    if (_lifes > 1)
-                        Console.WriteLine($"---Il vous reste {_lifes} essais---");
+                    if (s_lifes > 1)
+                        Console.WriteLine($"---Il vous reste {s_lifes} essais---");
                     else
-                        Console.WriteLine($"---Il vous reste {_lifes} essai---");
+                        Console.WriteLine($"---Il vous reste {s_lifes} essai---");
 
                     PrintMysteryWord();
                     Console.Write("Saisissez une lettre : ");
-                    _letterPlayer = InputLetter();
+                    s_letterPlayer = InputLetter();
 
-                    if (!_lettersTyped.Contains(_letterPlayer))
+                    if (!s_lettersTyped.Contains(s_letterPlayer))
                     {
-                        if (_mysteryWord.Contains(_letterPlayer))
+                        if (s_mysteryWord.Contains(s_letterPlayer))
                             Update();
                         else
                         {
                             Console.Beep();
-                            _lifes--;
+                            s_lifes--;
                         }
-                        _lettersTyped.Add(_letterPlayer);
+                        s_lettersTyped.Add(s_letterPlayer);
                     }
                     else
-                        Console.WriteLine($"Vous avez déjà entré la lettre \"{_letterPlayer}\", essayer une nouvelle lettre.");
+                        Console.WriteLine($"Vous avez déjà entré la lettre \"{s_letterPlayer}\", essayer une nouvelle lettre.");
 
-                } while (!IsWinning() && _lifes > 0);
+                } while (!IsWinning() && s_lifes > 0);
                 
                 Console.Write('\n');
                 
-                if (_lifes > 0)
-                    Console.WriteLine($"Bravo!\nVous avez gagné, le mot mystère était bien \"{_mysteryWord}\".");
+                if (s_lifes > 0)
+                    Console.WriteLine($"Bravo!\nVous avez gagné, le mot mystère était bien \"{s_mysteryWord}\".");
                 else
-                    Console.WriteLine($"Dommage!\nVous avez perdu car vous avez atteint le nombre limite d'essai.\nLe mot mystère était \"{_mysteryWord}\".");
+                    Console.WriteLine($"Dommage!\nVous avez perdu car vous avez atteint le nombre limite d'essai.\nLe mot mystère était \"{s_mysteryWord}\".");
             
             } while (IsRestarting());
             Console.WriteLine("-----------AU REVOIR------------");
@@ -78,16 +78,16 @@
             switch (choice) 
             {
                 case "1":
-                    _level = "Easy"; 
+                    s_level = "Easy"; 
                     break;
                 case "2":
-                    _level = "Medium";
+                    s_level = "Medium";
                     break;
                 case "3": 
-                    _level = "Hard";
+                    s_level = "Hard";
                     break;
                 case "4": 
-                    _level = "UltraHard";
+                    s_level = "UltraHard";
                     break;
                 default:
                     Console.WriteLine("-----Erreur fatale-----");
@@ -97,7 +97,7 @@
 
         private static bool IsWinning()
         {
-            foreach (bool b in _lettersFound) 
+            foreach (bool b in s_lettersFound) 
             {
                 if (!b)
                 {
@@ -109,39 +109,39 @@
 
         private static void Update()
         {
-            for (int i = 0; i < _mysteryWord.Length; i++)
+            for (int i = 0; i < s_mysteryWord.Length; i++)
             {
-                if (_letterPlayer.Equals(_mysteryWord[i]))
+                if (s_letterPlayer.Equals(s_mysteryWord[i]))
                 {
-                    _lettersFound[i] = true;
+                    s_lettersFound[i] = true;
                 }
             }
         }
 
         private static char InputLetter()
         {
-            string? _letterPlayer = Console.ReadLine();
+            string? s_letterPlayer = Console.ReadLine();
 
-            if (_letterPlayer == String.Empty || _letterPlayer == null)
+            if (s_letterPlayer == String.Empty || s_letterPlayer == null)
             {
                 do
                 {
                     Console.WriteLine("Entrez une lettre SVP!!! : ");
-                    _letterPlayer = Console.ReadLine();
-                } while (_letterPlayer == String.Empty || _letterPlayer == null);
+                    s_letterPlayer = Console.ReadLine();
+                } while (s_letterPlayer == String.Empty || s_letterPlayer == null);
             }
-            return _letterPlayer.Trim().ToUpper().ElementAt(0);
+            return s_letterPlayer.Trim().ToUpper().ElementAt(0);
         }
 
         private static void PrintMysteryWord()
         {
             Console.Write("\n");
             Console.Write("Mot mystère: ");
-            for (int i = 0; i < _lettersFound.Length; i++)
+            for (int i = 0; i < s_lettersFound.Length; i++)
             {
-                if (_lettersFound[i])
+                if (s_lettersFound[i])
                 {
-                    Console.Write(_mysteryWord[i]);
+                    Console.Write(s_mysteryWord[i]);
                 }
                 else
                 {
@@ -176,13 +176,13 @@
         private static void GenerateMysteryWord()
         {
             Random random = new Random();
-            string[] fileTextLines = File.ReadAllLines($"{_fileDirectory}/{_level}.txt");
-            _mysteryWord = fileTextLines[random.Next(fileTextLines.Length)];
-            _lettersFound = new bool[_mysteryWord.Length];
-            Array.Fill(_lettersFound, false);
-            _lifes = 5;
-            _letterPlayer = default;
-            _lettersTyped.Clear();
+            string[] fileTextLines = File.ReadAllLines($"{s_fileDirectory}/{s_level}.txt");
+            s_mysteryWord = fileTextLines[random.Next(fileTextLines.Length)];
+            s_lettersFound = new bool[s_mysteryWord.Length];
+            Array.Fill(s_lettersFound, false);
+            s_lifes = 5;
+            s_letterPlayer = default;
+            s_lettersTyped.Clear();
             Console.Clear();
         }
     }
